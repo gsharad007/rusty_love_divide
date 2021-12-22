@@ -24,7 +24,7 @@ pub struct Tile {
 
 impl Tile {
     pub fn new(edges: [u8; 4]) -> Tile {
-        Tile { edges: edges }
+        Tile { edges }
     }
 }
 
@@ -174,7 +174,7 @@ impl Tile {
         let mut tiles = Vec::with_capacity(TILE_COUNT);
         for (e1, e2, e3, e4) in iproduct!(1..=4, 1..=4, 1..=4, 1..=4) {
             let tile = Tile::new([e1, e2, e3, e4]);
-            if tiles.contains(&tile) == false {
+            if !tiles.contains(&tile) {
                 tiles.push(tile);
             }
         }
