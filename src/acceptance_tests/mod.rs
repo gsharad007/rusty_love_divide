@@ -7,7 +7,6 @@ struct GameSession {
 
 type Deck = Vec<Tile>;
 
-
 #[cfg(test)]
 mod given_square_grid_and_tiles {
     mod when_starting_new_game {

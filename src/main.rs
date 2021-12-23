@@ -1,5 +1,5 @@
-mod game;
 mod acceptance_tests;
+mod game;
 
 fn main() {
     println!("Hello, world!");
