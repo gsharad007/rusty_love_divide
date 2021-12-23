@@ -9,7 +9,7 @@ jobs:
   release:
     name: Packaging
     env:
-      PROJECT_NAME_UNDERSCORE: rust_ci_github_actions_workflow
+      PROJECT_NAME_UNDERSCORE: rusty_love_divide
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
