@@ -79,7 +79,7 @@ impl Rotatable for Tile {
             self.edges.len(),
             4,
             "This tile {:?} does not have 4 edges. INCONCEIVABLE!",
-            self.edges
+            self
         );
         Tile::new([self.edges[3], self.edges[0], self.edges[1], self.edges[2]])
     }
@@ -88,7 +88,7 @@ impl Rotatable for Tile {
             self.edges.len(),
             4,
             "This tile {:?} does not have 4 edges. INCONCEIVABLE!",
-            self.edges
+            self
         );
         Tile::new([self.edges[1], self.edges[2], self.edges[3], self.edges[0]])
     }
@@ -389,12 +389,13 @@ mod tests_generating_permutations {
     #[test]
     fn test_generate_all_permutations_of_square_tiles_with_4_edge_types() {
         let deck = Tile::generate_all_permutations_of_tiles();
-        assert_eq!(71, deck.len(), "There should have been 71 (70 unique square tiles + 1 root tile)s generated in the game with 4 edge types.");
+        assert_eq!(71, deck.len(), "There should have been 71 (70 unique square tiles + 1 root tile)s generated in the deck with 4 edge types.");
 
         assert!(deck.contains(&Tile::new([0, 0, 0, 0])));
 
         for (e1, e2, e3, e4) in iproduct!(1..=4, 1..=4, 1..=4, 1..=4) {
-            assert!(deck.contains(&Tile::new([e1, e2, e3, e4])));
+            let tile = Tile::new([e1, e2, e3, e4]);
+            assert!(deck.contains(&tile), "Deck should have contained a tile equivalent to {:?}", tile);
         }
     }
 
@@ -402,7 +403,7 @@ mod tests_generating_permutations {
     fn test_generate_all_permutations_of_square_tiles_is_unique() {
         let deck = Tile::generate_all_permutations_of_tiles();
         let deck_unique = deck.clone().into_iter().unique().collect_vec();
-        assert_eq!(deck.len(), deck_unique.len(), "There should be 71 (70 unique square tiles + 1 root tile)s in the game with 4 edge types. Seems not all are unique.");
+        assert_eq!(deck.len(), deck_unique.len(), "There should be 71 (70 unique square tiles + 1 root tile)s in the deck with 4 edge types. Seems not all are unique.");
         itertools::assert_equal(&deck, &deck_unique);
     }
 
@@ -411,7 +412,7 @@ mod tests_generating_permutations {
         let deck = Tile::generate_all_permutations_of_tiles();
         let mut deck_sorted = deck.clone();
         deck_sorted.sort_by_key(|a| a.calculate_value());
-        assert_eq!(deck.len(), deck_sorted.len(), "There should be 71 (70 unique square tiles + 1 root tile)s in the game with 4 edge types. Seems not all are unique.");
+        assert_eq!(deck.len(), deck_sorted.len(), "There should be 71 (70 unique square tiles + 1 root tile)s in the deck with 4 edge types. Seems not all are unique.");
 
         itertools::assert_equal(&deck[..deck.len()-1], &deck_sorted[1..]);
     }
