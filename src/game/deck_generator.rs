@@ -1,10 +1,11 @@
 use super::deck::Deck;
 use super::tile::Tile;
 use itertools::iproduct;
+use itertools::Itertools;
 
-// trait DeckGenerator<CardType> {
-//     fn generate_deck_with_all_permutations() -> Deck<CardType>;
-// }
+pub trait DeckGenerator<DeckType> {
+    fn generate_with_all_permutations() -> DeckType;
+}
 
 const TILE_ROOT: Tile = Tile::new([0, 0, 0, 0]);
 
@@ -31,17 +32,26 @@ const TILE_ROOT: Tile = Tile::new([0, 0, 0, 0]);
 /// assert!(!deck.contains(&Tile::new([2, 1, 0, 3])));
 /// assert!(!deck.contains(&Tile::new([4, 3, 2, 0])));
 /// ```
-pub fn generate_deck_with_all_permutations() -> Deck<Tile> {
-    const TILE_COUNT: usize = 70 + 1; // 70 Player Tiles + 1 Home Tile
-    let mut tiles = Vec::<Tile>::with_capacity(TILE_COUNT);
-    for (e1, e2, e3, e4) in iproduct!(1..=4, 1..=4, 1..=4, 1..=4) {
-        let tile = Tile::new([e1, e2, e3, e4]);
-        if !tiles.contains(&tile) {
-            tiles.push(tile);
-        }
+impl DeckGenerator<Deck<Tile>> for Deck<Tile> {
+    fn generate_with_all_permutations() -> Deck<Tile> {
+        // TODO: Both these versions do the same thing. Need to bench to make sure if there is no speed degradation
+        let mut tiles = iproduct!(1..=4, 1..=4, 1..=4, 1..=4)
+            .into_iter()
+            .map(|i| Tile::new([i.0, i.1, i.2, i.3]))
+            .unique()
+            .collect_vec();
+        // const ROOT_COUNT: usize = 1;
+        // const TILE_COUNT: usize = 70 + ROOT_COUNT; // 70 Player Tiles + 1 Home Tile
+        // let mut tiles = Deck::<Tile>::with_capacity(TILE_COUNT);
+        // for (e1, e2, e3, e4) in iproduct!(1..=4, 1..=4, 1..=4, 1..=4) {
+        //     let tile = Tile::new([e1, e2, e3, e4]);
+        //     if !tiles.contains(&tile) {
+        //         tiles.push(tile);
+        //     }
+        // }
+        tiles.push(TILE_ROOT);
+        tiles
     }
-    tiles.push(TILE_ROOT);
-    tiles
 }
 
 #[cfg(test)]
@@ -51,7 +61,7 @@ mod tests_generating_permutations {
 
     #[test]
     fn test_generate_all_permutations_of_square_tiles_with_4_edge_types() {
-        let deck = generate_deck_with_all_permutations();
+        let deck = Deck::generate_with_all_permutations();
         assert_eq!(71, deck.len(), "There should have been 71 (70 unique square tiles + 1 root tile)s generated in the deck with 4 edge types.");
 
         assert!(deck.contains(&Tile::new([0, 0, 0, 0])));
@@ -68,7 +78,7 @@ mod tests_generating_permutations {
 
     #[test]
     fn test_generate_all_permutations_of_square_tiles_is_unique() {
-        let deck = generate_deck_with_all_permutations();
+        let deck = Deck::generate_with_all_permutations();
         let deck_unique = deck.clone().into_iter().unique().collect_vec();
         assert_eq!(deck.len(), deck_unique.len(), "There should be 71 (70 unique square tiles + 1 root tile)s in the deck with 4 edge types. Seems not all are unique.");
         itertools::assert_equal(&deck, &deck_unique);
@@ -76,7 +86,7 @@ mod tests_generating_permutations {
 
     // #[test]
     // fn test_generate_all_permutations_of_square_tiles_is_ascending_value() {
-    //     let deck = generate_all_permutations_of_tiles();
+    //     let deck = Deck::generate_all_permutations_of_tiles();
     //     let mut deck_sorted = deck.clone();
     //     deck_sorted.sort_by_key(|a| a.calculate_value());
     //     assert_eq!(deck.len(), deck_sorted.len(), "There should be 71 (70 unique square tiles + 1 root tile)s in the deck with 4 edge types. Seems not all are unique.");

@@ -1,4 +1,5 @@
 use super::game::deck::Deck;
+// use super::game::deck_generator::DeckGenerator;
 use super::game::tile::Tile;
 
 #[derive(Debug)]
@@ -11,14 +12,14 @@ struct GameSession<'a> {
 mod given_square_grid_and_tiles {
     mod when_starting_new_game {
         use super::super::*;
-        use crate::game::deck_generator::generate_deck_with_all_permutations;
+        use crate::game::deck_generator::DeckGenerator;
         use anyhow::Result;
         use itertools::Itertools;
 
         #[test]
         fn then_setup_game() -> Result<()> {
             let mut game_session = GameSession {
-                game_deck: generate_deck_with_all_permutations(),
+                game_deck: Deck::generate_with_all_permutations(),
                 play_deck: Deck::new(),
             };
             assert_eq!(71, game_session.game_deck.len(), "There should have been 71 (70 unique square tiles + 1 root tile)s generated in the game with 4 edge types.");
