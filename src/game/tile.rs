@@ -395,7 +395,11 @@ mod tests_generating_permutations {
 
         for (e1, e2, e3, e4) in iproduct!(1..=4, 1..=4, 1..=4, 1..=4) {
             let tile = Tile::new([e1, e2, e3, e4]);
-            assert!(deck.contains(&tile), "Deck should have contained a tile equivalent to {:?}", tile);
+            assert!(
+                deck.contains(&tile),
+                "Deck should have contained a tile equivalent to {:?}",
+                tile
+            );
         }
     }
 
@@ -414,6 +418,6 @@ mod tests_generating_permutations {
         deck_sorted.sort_by_key(|a| a.calculate_value());
         assert_eq!(deck.len(), deck_sorted.len(), "There should be 71 (70 unique square tiles + 1 root tile)s in the deck with 4 edge types. Seems not all are unique.");
 
-        itertools::assert_equal(&deck[..deck.len()-1], &deck_sorted[1..]);
+        itertools::assert_equal(&deck[..deck.len() - 1], &deck_sorted[1..]);
     }
 }
