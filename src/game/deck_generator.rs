@@ -3,7 +3,7 @@ use super::tile::Tile;
 use itertools::iproduct;
 
 // trait DeckGenerator<CardType> {
-//     fn generate_all_permutations_of_tiles() -> Deck<CardType>;
+//     fn generate_deck_with_all_permutations() -> Deck<CardType>;
 // }
 
 const TILE_ROOT: Tile = Tile::new([0, 0, 0, 0]);
@@ -13,7 +13,7 @@ const TILE_ROOT: Tile = Tile::new([0, 0, 0, 0]);
 /// # Examples
 ///
 /// ```
-/// let deck = generate_all_permutations_of_tiles();
+/// let deck = generate_deck_with_all_permutations();
 ///
 /// assert_eq!(71, deck.len(), "There should have been 71 (70 unique square tiles + 1 root tile)s generated in the game with 4 edge types.");
 ///
