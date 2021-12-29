@@ -34,12 +34,8 @@ const TILE_ROOT: Tile = Tile::new([0, 0, 0, 0]);
 /// ```
 impl DeckGenerator<Deck<Tile>> for Deck<Tile> {
     fn generate_with_all_permutations() -> Deck<Tile> {
-        // TODO: Both these versions do the same thing. Need to bench to make sure if there is no speed degradation
-        let mut tiles = iproduct!(1..=4, 1..=4, 1..=4, 1..=4)
-            .into_iter()
-            .map(|i| Tile::new([i.0, i.1, i.2, i.3]))
-            .unique()
-            .collect_vec();
+        // TODO: Both these versions do the same thing, but the for loop version is about 3 times slower than iter chain (24,1xx ns vs 8,0xx ns)
+        // Was not expecting this but and needs further investigation and loving the rust version is so much faster and reads easier.
         // const ROOT_COUNT: usize = 1;
         // const TILE_COUNT: usize = 70 + ROOT_COUNT; // 70 Player Tiles + 1 Home Tile
         // let mut tiles = Deck::<Tile>::with_capacity(TILE_COUNT);
@@ -49,6 +45,11 @@ impl DeckGenerator<Deck<Tile>> for Deck<Tile> {
         //         tiles.push(tile);
         //     }
         // }
+        let mut tiles = iproduct!(1..=4, 1..=4, 1..=4, 1..=4)
+            .into_iter()
+            .map(|i| Tile::new([i.0, i.1, i.2, i.3]))
+            .unique()
+            .collect_vec();
         tiles.push(TILE_ROOT);
         tiles
     }
@@ -56,8 +57,10 @@ impl DeckGenerator<Deck<Tile>> for Deck<Tile> {
 
 #[cfg(test)]
 mod tests_generating_permutations {
+    extern crate test;
     use super::*;
     use itertools::Itertools;
+    use test::Bencher;
 
     #[test]
     fn test_generate_all_permutations_of_square_tiles_with_4_edge_types() {
@@ -93,4 +96,9 @@ mod tests_generating_permutations {
 
     //     itertools::assert_equal(&deck[..deck.len() - 1], &deck_sorted[1..]);
     // }
+
+    #[bench]
+    fn bench_generate_all_permutations_of_square_tiles_with_4_edge_types(b: &mut Bencher) {
+        b.iter(|| Deck::generate_with_all_permutations());
+    }
 }
