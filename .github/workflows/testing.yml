@@ -12,7 +12,9 @@ jobs:
     env:
       PROJECT_NAME_UNDERSCORE: rusty_love_divide
       CARGO_INCREMENTAL: 0
-      RUSTFLAGS: -Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests -Cpanic=abort
+      # RUSTFLAGS: -Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests -Cpanic=abort
+      RUSTFLAGS: -Z instrument-coverage
+      LLVM_PROFILE_FILE: $PROJECT_NAME_UNDERSCORE-%p-%m.profraw
       RUSTDOCFLAGS: -Cpanic=abort
     runs-on: ubuntu-latest
     steps:
@@ -37,11 +39,11 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Cargo.lock') }}
       - name: Generate test result and coverage report
         run: |
+          rustup component add llvm-tools-preview;
           cargo install cargo2junit grcov;
-          cargo build --verbose;
-          cargo test $CARGO_OPTIONS -- -Z unstable-options --format json | cargo2junit > results.xml;
-          zip -0 ccov.zip `find . \( -name "$PROJECT_NAME_UNDERSCORE*.gc*" \) -print`;
-          grcov ccov.zip -s . -t lcov --llvm --ignore-not-existing --ignore "/*" --ignore "tests/*" -o lcov.info;
+          cargo build --verbose $CARGO_OPTIONS;
+          cargo test --verbose $CARGO_OPTIONS -- -Z unstable-options --format json | cargo2junit > results.xml;
+          grcov . --binary-path ./target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "/*" -o lcov.info
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
