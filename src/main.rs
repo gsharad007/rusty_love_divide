@@ -1,3 +1,5 @@
+#![feature(test)]
+
 mod acceptance_tests;
 mod game;
 

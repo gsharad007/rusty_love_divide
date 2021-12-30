@@ -57,10 +57,10 @@ impl DeckGenerator<Deck<Tile>> for Deck<Tile> {
 
 #[cfg(test)]
 mod tests_generating_permutations {
-    // extern crate test;
+    extern crate test;
     use super::*;
     use itertools::Itertools;
-    // use test::Bencher;
+    use test::Bencher;
 
     #[test]
     fn test_generate_all_permutations_of_square_tiles_with_4_edge_types() {
@@ -97,8 +97,8 @@ mod tests_generating_permutations {
     //     itertools::assert_equal(&deck[..deck.len() - 1], &deck_sorted[1..]);
     // }
 
-    // #[bench]
-    // fn bench_generate_all_permutations_of_square_tiles_with_4_edge_types(b: &mut Bencher) {
-    //     b.iter(|| Deck::generate_with_all_permutations());
-    // }
+    #[bench]
+    fn bench_generate_all_permutations_of_square_tiles_with_4_edge_types(b: &mut Bencher) {
+        b.iter(|| Deck::generate_with_all_permutations());
+    }
 }
