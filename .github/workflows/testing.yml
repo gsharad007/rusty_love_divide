@@ -13,7 +13,7 @@ jobs:
       PROJECT_NAME_UNDERSCORE: rusty_love_divide
       CARGO_INCREMENTAL: 0
       # RUSTFLAGS: -Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests -Cpanic=abort
-      RUSTFLAGS: -Z instrument-coverage
+      RUSTFLAGS: -Zinstrument-coverage
       LLVM_PROFILE_FILE: $PROJECT_NAME_UNDERSCORE-%p-%m.profraw
       RUSTDOCFLAGS: -Cpanic=abort
     runs-on: ubuntu-latest
