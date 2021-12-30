@@ -7,8 +7,8 @@ on:
 name: Benchmarking
 
 jobs:
-  bench:
-    name: Benchmarks
+  bench-linux:
+    name: Benchmark-Linux
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -24,6 +24,26 @@ jobs:
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
-          check_name: Test Results
+          check_name: Bench Results ${{ runner.os }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: results.xml
+  bench-windows:
+    name: Benchmark-Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: bench
+          args:  -- -Z unstable-options --format junit > results.xml
+      - name: Upload test results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          check_name: Bench Results ${{ runner.os }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           files: results.xml

@@ -41,8 +41,8 @@ jobs:
       - name: Generate test result and coverage report
         run: |
           rustup component add llvm-tools-preview;
-          cargo install grcov;
-          cargo test --verbose $CARGO_OPTIONS -- -Z unstable-options --format junit> results.xml;
+          cargo install cargo2junit grcov;
+          cargo test --verbose $CARGO_OPTIONS -- -Z unstable-options --format junit > results.xml;
           grcov . --binary-path ./target/debug/ -s . -t lcov --ignore-not-existing --ignore "/*" -o lcov.info
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v1
