@@ -6,8 +6,8 @@ on:
 name: Packaging
 
 jobs:
-  release:
-    name: Packaging
+  release-linux:
+    name: Packaging-Linux
     env:
       PROJECT_NAME_UNDERSCORE: rusty_love_divide
     runs-on: ubuntu-latest
@@ -23,5 +23,24 @@ jobs:
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.PROJECT_NAME_UNDERSCORE }}
+          name: ${{ env.PROJECT_NAME_UNDERSCORE }}-x86_64-unknown-linux-gnu
+          path: target/release/${{ env.PROJECT_NAME_UNDERSCORE }}
+  release-windows:
+    name: Packaging-Windows
+    env:
+      PROJECT_NAME_UNDERSCORE: rusty_love_divide
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
+      - name: Release Build
+        run: cargo build --release
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.PROJECT_NAME_UNDERSCORE }}-x86_64-pc-windows-msvc
           path: target/release/${{ env.PROJECT_NAME_UNDERSCORE }}
