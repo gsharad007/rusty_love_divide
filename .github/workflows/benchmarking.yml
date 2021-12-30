@@ -20,4 +20,10 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: bench
-          args:  -- -Z unstable-options --format json
+          args:  -- -Z unstable-options --format junit > results.xml
+      - name: Upload test results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        with:
+          check_name: Test Results
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: results.xml

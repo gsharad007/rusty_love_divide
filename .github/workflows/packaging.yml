@@ -23,7 +23,7 @@ jobs:
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.PROJECT_NAME_UNDERSCORE }}-x86_64-unknown-linux-gnu
+          name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ runner.os }}-x86_64-unknown-linux-gnu
           path: target/release/${{ env.PROJECT_NAME_UNDERSCORE }}
   release-windows:
     name: Packaging-Windows
@@ -42,5 +42,5 @@ jobs:
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.PROJECT_NAME_UNDERSCORE }}-x86_64-pc-windows-msvc
-          path: target/release/${{ env.PROJECT_NAME_UNDERSCORE }}
+          name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ runner.os }}-x86_64-pc-windows-msvc
+          path: target/release/${{ env.PROJECT_NAME_UNDERSCORE }}.*
