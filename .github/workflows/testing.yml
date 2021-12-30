@@ -43,7 +43,7 @@ jobs:
           cargo install cargo2junit grcov;
           cargo build --verbose $CARGO_OPTIONS;
           cargo test --verbose $CARGO_OPTIONS -- -Z unstable-options --format json | cargo2junit > results.xml;
-          grcov . --binary-path ./target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "/*" -o lcov.info
+          grcov . --binary-path ./target/debug/ -s . -t lcov --branch --ignore-not-existing --ignore "/*" -o lcov.info;
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
