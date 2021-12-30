@@ -16,6 +16,7 @@ jobs:
       # RUSTFLAGS: -Zinstrument-coverage
       # LLVM_PROFILE_FILE: $PROJECT_NAME_UNDERSCORE-%p-%m.profraw
       RUSTDOCFLAGS: -Cpanic=abort
+      RUST_BACKTRACE: 1
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
