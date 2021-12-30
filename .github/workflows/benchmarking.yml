@@ -4,11 +4,11 @@ on:
     branches:
       - main
 
-name: Linting
+name: Benchmarking
 
 jobs:
   bench:
-    name: Benchmarking
+    name: Benchmarks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
