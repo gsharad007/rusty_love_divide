@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640941875018,
+  "lastUpdate": 1640941917647,
   "repoUrl": "https://github.com/gsharad007/rusty_love_divide",
   "entries": {
     "bench-Linux": [
@@ -229,6 +229,34 @@ window.BENCHMARK_DATA = {
             "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_of_square_tiles_with_4_edge_types",
             "value": 18670,
             "range": "± 5230",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "sharad@unknownworlds.com",
+            "name": "THESHREDDER\\TheBeast"
+          },
+          "committer": {
+            "email": "sharad@unknownworlds.com",
+            "name": "THESHREDDER\\TheBeast"
+          },
+          "distinct": true,
+          "id": "f2f424f7cd767d0be37f7dc36ac5dd7564cedb8e",
+          "message": "Renaming workflows to read better in README.md",
+          "timestamp": "2021-12-31T04:10:17-05:00",
+          "tree_id": "3d22e53ac5639b528777eb098918de48d2583a14",
+          "url": "https://github.com/gsharad007/rusty_love_divide/commit/f2f424f7cd767d0be37f7dc36ac5dd7564cedb8e"
+        },
+        "date": 1640941912361,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_of_square_tiles_with_4_edge_types",
+            "value": 17775,
+            "range": "± 1800",
             "unit": "ns/iter"
           }
         ]
