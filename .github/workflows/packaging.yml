@@ -6,11 +6,15 @@ on:
 name: Packaging
 
 jobs:
-  release-linux:
-    name: Packaging-Linux
+  release:
+    name: Packaging
     env:
       PROJECT_NAME_UNDERSCORE: rusty_love_divide
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        profile: [release, dev]
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -18,39 +22,17 @@ jobs:
           profile: minimal
           toolchain: nightly
           override: true
-      - name: Release Build
-        run: cargo build --release
-      - name: 'Upload Artifact'
+      - name: Build
+        run: cargo build --profile ${{ matrix.profile }}
+      - name: Archive Executable
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ runner.os }}-x86_64-unknown-linux-gnu
-          path: target/release/${{ env.PROJECT_NAME_UNDERSCORE }}
-      - name: 'Archive Build'
+          name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ matrix.profile }}-${{ runner.os }}-${{ runner.arch }}-x86_64-unknown-linux-gnu
+          path: |
+            target/*/${{ env.PROJECT_NAME_UNDERSCORE }}
+            target/*/${{ env.PROJECT_NAME_UNDERSCORE }}.exe
+      - name: Archive Build
         uses: actions/upload-artifact@v2
         with:
-          name: build-${{ env.PROJECT_NAME_UNDERSCORE }}-${{ runner.os }}-x86_64-unknown-linux-gnu
-          path: target/release/
-  release-windows:
-    name: Packaging-Windows
-    env:
-      PROJECT_NAME_UNDERSCORE: rusty_love_divide
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: nightly
-          override: true
-      - name: Release Build
-        run: cargo build --release
-      - name: 'Upload Artifact'
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.PROJECT_NAME_UNDERSCORE }}-${{ runner.os }}-x86_64-pc-windows-msvc
-          path: target/release/${{ env.PROJECT_NAME_UNDERSCORE }}.*
-      - name: 'Archive Build'
-        uses: actions/upload-artifact@v2
-        with:
-          name: build-${{ env.PROJECT_NAME_UNDERSCORE }}-${{ runner.os }}-x86_64-unknown-linux-gnu
-          path: target/release/
+          name: build-${{ env.PROJECT_NAME_UNDERSCORE }}-${{ matrix.profile }}-${{ runner.os }}-${{ runner.arch }}-x86_64-unknown-linux-gnu
+          path: target/
