@@ -19,21 +19,28 @@ jobs:
       - name: Install helpers
         run: cargo install cargo2junit
       - name: Run bench
-        uses: actions-rs/cargo@v1
-        with:
-          command: bench
-          args:  -- -Z unstable-options --report-time --format json | cargo2junit > results.xml
+        run: cargo bench | tee output.txt
+        # uses: actions-rs/cargo@v1
+        # with:
+        #   command: bench
+        #   args:  -- -Z unstable-options --report-time --format json | cargo2junit | tee results.xml
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v2
         with:
           name: bench-results-${{ runner.os }}
-          path: results.xml
-      - name: Upload test results
-        uses: EnricoMi/publish-unit-test-result-action@v1
+          path: output.txt
+      - name: Store benchmark result
+        uses: benchmark-action/github-action-benchmark@v1
         with:
-          check_name: Bench Results ${{ runner.os }}
+          tool: 'cargo'
+          output-file-path: output.txt          
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: results.xml
+      # - name: Upload test results
+      #   uses: EnricoMi/publish-unit-test-result-action@v1
+      #   with:
+      #     check_name: Bench Results ${{ runner.os }}
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     files: results.xml
   bench-windows:
     name: Benchmark-Windows
     runs-on: windows-latest
@@ -49,7 +56,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: bench
-          args:  -- -Z unstable-options --report-time --format json | cargo2junit > results.xml
+          args:  -- -Z unstable-options --report-time --format json | cargo2junit | tee > results.xml
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v2
         with:
