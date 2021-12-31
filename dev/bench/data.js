@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640940050639,
+  "lastUpdate": 1640941078642,
   "repoUrl": "https://github.com/gsharad007/rusty_love_divide",
   "entries": {
     "bench-Linux": [
@@ -115,6 +115,34 @@ window.BENCHMARK_DATA = {
             "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_of_square_tiles_with_4_edge_types",
             "value": 15583,
             "range": "± 1998",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "sharad@unknownworlds.com",
+            "name": "THESHREDDER\\TheBeast"
+          },
+          "committer": {
+            "email": "sharad@unknownworlds.com",
+            "name": "THESHREDDER\\TheBeast"
+          },
+          "distinct": true,
+          "id": "69535db28d69addc7b7e47cc09934adb1e5a869a",
+          "message": "Updating Packaging workflow with plaform and config matrix",
+          "timestamp": "2021-12-31T03:56:57-05:00",
+          "tree_id": "a8e76cc2531d6bc0e6d6ce9cbc5c50e0cf4e4e99",
+          "url": "https://github.com/gsharad007/rusty_love_divide/commit/69535db28d69addc7b7e47cc09934adb1e5a869a"
+        },
+        "date": 1640941078231,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_of_square_tiles_with_4_edge_types",
+            "value": 16058,
+            "range": "± 517",
             "unit": "ns/iter"
           }
         ]
