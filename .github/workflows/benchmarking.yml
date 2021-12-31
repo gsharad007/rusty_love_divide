@@ -17,10 +17,12 @@ jobs:
           profile: minimal
           toolchain: nightly
           override: true
+      - name: Install helpers
+        run: cargo install cargo2junit
       - uses: actions-rs/cargo@v1
         with:
           command: bench
-          args:  -- -Z unstable-options --format junit > results.xml
+          args:  -- -Z unstable-options --report-time --format json | cargo2junit > results.xml
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v2
         with:
@@ -42,10 +44,12 @@ jobs:
           profile: minimal
           toolchain: nightly
           override: true
+      - name: Install helpers
+        run: cargo install cargo2junit
       - uses: actions-rs/cargo@v1
         with:
           command: bench
-          args:  -- -Z unstable-options --format junit > results.xml
+          args:  -- -Z unstable-options --report-time --format json | cargo2junit > results.xml
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v2
         with:

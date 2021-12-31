@@ -25,6 +25,7 @@ jobs:
           profile: minimal
           toolchain: nightly
           override: true
+          components: llvm-tools-preview
       - name: Cache dependencies
         uses: actions/cache@v2
         env:
@@ -38,11 +39,11 @@ jobs:
             ~/.cargo/registry/cache
             target
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('Cargo.lock') }}
+      - name: Install helpers
+        run: cargo install cargo2junit grcov
       - name: Generate test result and coverage report
         run: |
-          rustup component add llvm-tools-preview;
-          cargo install cargo2junit grcov;
-          cargo test $CARGO_OPTIONS -- -Z unstable-options --format junit > results.xml;
+          cargo test $CARGO_OPTIONS -- -Z unstable-options --report-time --format json | cargo2junit > results.xml;
           grcov . --binary-path ./target/debug/ -s . -t lcov --ignore-not-existing --ignore "/*" -o lcov.info
       - name: Archive test
         uses: actions/upload-artifact@v2
