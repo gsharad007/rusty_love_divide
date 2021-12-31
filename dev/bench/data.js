@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640937882500,
+  "lastUpdate": 1640938863171,
   "repoUrl": "https://github.com/gsharad007/rusty_love_divide",
   "entries": {
     "bench-Linux": [
@@ -27,6 +27,34 @@ window.BENCHMARK_DATA = {
             "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_of_square_tiles_with_4_edge_types",
             "value": 13480,
             "range": "± 53",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "sharad@unknownworlds.com",
+            "name": "THESHREDDER\\TheBeast"
+          },
+          "committer": {
+            "email": "sharad@unknownworlds.com",
+            "name": "THESHREDDER\\TheBeast"
+          },
+          "distinct": true,
+          "id": "ffca131565573256ffe68c1906e95be467940ed7",
+          "message": "Finally working benchmarks with results pages",
+          "timestamp": "2021-12-31T03:20:07-05:00",
+          "tree_id": "029fa5af5259a365f07d6b8484964448c8e850ee",
+          "url": "https://github.com/gsharad007/rusty_love_divide/commit/ffca131565573256ffe68c1906e95be467940ed7"
+        },
+        "date": 1640938862367,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_of_square_tiles_with_4_edge_types",
+            "value": 13397,
+            "range": "± 60",
             "unit": "ns/iter"
           }
         ]
