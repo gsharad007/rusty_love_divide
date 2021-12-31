@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640938898990,
+  "lastUpdate": 1640940022732,
   "repoUrl": "https://github.com/gsharad007/rusty_love_divide",
   "entries": {
     "bench-Linux": [
@@ -85,6 +85,36 @@ window.BENCHMARK_DATA = {
             "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_of_square_tiles_with_4_edge_types",
             "value": 18876,
             "range": "± 1471",
+            "unit": "ns/iter"
+          }
+        ]
+      }
+    ],
+    "Linux-X64": [
+      {
+        "commit": {
+          "author": {
+            "email": "sharad@unknownworlds.com",
+            "name": "THESHREDDER\\TheBeast"
+          },
+          "committer": {
+            "email": "sharad@unknownworlds.com",
+            "name": "THESHREDDER\\TheBeast"
+          },
+          "distinct": true,
+          "id": "691eae743528d3c6e9760a29ff7f71e56440f1db",
+          "message": "Trying our workflow matrix for platforms",
+          "timestamp": "2021-12-31T03:39:04-05:00",
+          "tree_id": "198289d8129d587a8252364e9e345bbf833ee01b",
+          "url": "https://github.com/gsharad007/rusty_love_divide/commit/691eae743528d3c6e9760a29ff7f71e56440f1db"
+        },
+        "date": 1640940021910,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_of_square_tiles_with_4_edge_types",
+            "value": 15583,
+            "range": "± 1998",
             "unit": "ns/iter"
           }
         ]
