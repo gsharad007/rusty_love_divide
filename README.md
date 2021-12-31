@@ -15,3 +15,5 @@ Some WIP candidates
 [![GitHub Super-Linter](https://github.com/gsharad007/rusty_love_divide/workflows/Linting/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 [![codecov](https://codecov.io/gh/gsharad007/rusty_love_divide/branch/main/graph/badge.svg?token=PY5ZAM29DI)](https://codecov.io/gh/gsharad007/rusty_love_divide)
+
+[benchmarks](https://gsharad007.github.io/rusty_love_divide/dev/bench/)

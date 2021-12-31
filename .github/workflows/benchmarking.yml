@@ -1,5 +1,4 @@
 on:
-  pull_request:
   push:
     branches:
       - main
@@ -18,14 +17,11 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
         with:
+          profile: minimal
           toolchain: nightly
           override: true
       - name: Run bench
         run: cargo bench | tee output.txt
-        # uses: actions-rs/cargo@v1
-        # with:
-        #   command: bench
-        #   args:  -- -Z unstable-options --report-time --format json | cargo2junit | tee results.xml
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v2
         with:
@@ -41,12 +37,7 @@ jobs:
           auto-push: true
           alert-threshold: '150%'
           comment-on-alert: true
-      # - name: Upload test results
-      #   uses: EnricoMi/publish-unit-test-result-action@v1
-      #   with:
-      #     check_name: Bench Results ${{ runner.os }}
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     files: results.xml
+          comment-always: true
   bench-windows:
     name: Benchmark-Windows
     runs-on: windows-latest
@@ -64,9 +55,14 @@ jobs:
         with:
           name: bench-results-${{ runner.os }}
           path: output.txt
-      # - name: Upload test results
-      #   uses: EnricoMi/publish-unit-test-result-action/composite@v1
-      #   with:
-      #     check_name: Bench Results ${{ runner.os }}
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     files: results.xml
+      - name: Store benchmark result
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: bench-${{ runner.os }}
+          tool: 'cargo'
+          output-file-path: output.txt          
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          alert-threshold: '150%'
+          comment-on-alert: true
+          comment-always: true
