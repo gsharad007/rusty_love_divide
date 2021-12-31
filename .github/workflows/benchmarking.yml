@@ -21,6 +21,11 @@ jobs:
         with:
           command: bench
           args:  -- -Z unstable-options --format junit > results.xml
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: bench-results-${{ runner.os }}
+          path: results.xml
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
@@ -41,6 +46,11 @@ jobs:
         with:
           command: bench
           args:  -- -Z unstable-options --format junit > results.xml
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: bench-results-${{ runner.os }}
+          path: results.xml
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action/composite@v1
         with:

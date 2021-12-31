@@ -42,8 +42,18 @@ jobs:
         run: |
           rustup component add llvm-tools-preview;
           cargo install cargo2junit grcov;
-          cargo test --verbose $CARGO_OPTIONS -- -Z unstable-options --format junit > results.xml;
+          cargo test $CARGO_OPTIONS -- -Z unstable-options --format junit > results.xml;
           grcov . --binary-path ./target/debug/ -s . -t lcov --ignore-not-existing --ignore "/*" -o lcov.info
+      - name: Archive test
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results-${{ runner.os }}
+          path: results.xml
+      - name: Archive codecoverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: codecoverage-results-${{ runner.os }}
+          path: lcov.info
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v1
         with:
