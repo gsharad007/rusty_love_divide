@@ -181,7 +181,7 @@ mod tests_equality {
 }
 
 impl Tile {
-    fn calculate_value(&self) -> u32 {
+    pub fn calculate_value(&self) -> u32 {
         self.edges
             .iter()
             .rev()

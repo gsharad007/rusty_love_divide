@@ -5,6 +5,7 @@ use itertools::Itertools;
 
 pub trait DeckGenerator<DeckType> {
     fn generate_with_all_permutations() -> DeckType;
+    fn generate_with_all_permutations_and_root() -> DeckType;
 }
 
 const TILE_ROOT: Tile = Tile::new([0, 0, 0, 0]);
@@ -45,11 +46,16 @@ impl DeckGenerator<Deck<Tile>> for Deck<Tile> {
         //         tiles.push(tile);
         //     }
         // }
-        let mut tiles = iproduct!(1..=4, 1..=4, 1..=4, 1..=4)
+        let tiles = iproduct!(1..=4, 1..=4, 1..=4, 1..=4)
             .into_iter()
             .map(|i| Tile::new([i.0, i.1, i.2, i.3]))
             .unique()
             .collect_vec();
+        tiles
+    }
+
+    fn generate_with_all_permutations_and_root() -> Deck<Tile> {
+        let mut tiles = Self::generate_with_all_permutations();
         tiles.push(TILE_ROOT);
         tiles
     }
@@ -64,7 +70,7 @@ mod tests_generating_permutations {
 
     #[test]
     fn test_generate_all_permutations_of_square_tiles_with_4_edge_types() {
-        let deck = Deck::generate_with_all_permutations();
+        let deck = Deck::generate_with_all_permutations_and_root();
         assert_eq!(71, deck.len(), "There should have been 71 (70 unique square tiles + 1 root tile)s generated in the deck with 4 edge types.");
 
         assert!(deck.contains(&Tile::new([0, 0, 0, 0])));
@@ -81,24 +87,29 @@ mod tests_generating_permutations {
 
     #[test]
     fn test_generate_all_permutations_of_square_tiles_is_unique() {
-        let deck = Deck::generate_with_all_permutations();
+        let deck = Deck::generate_with_all_permutations_and_root();
         let deck_unique = deck.clone().into_iter().unique().collect_vec();
         assert_eq!(deck.len(), deck_unique.len(), "There should be 71 (70 unique square tiles + 1 root tile)s in the deck with 4 edge types. Seems not all are unique.");
         itertools::assert_equal(&deck, &deck_unique);
     }
 
-    // #[test]
-    // fn test_generate_all_permutations_of_square_tiles_is_ascending_value() {
-    //     let deck = Deck::generate_all_permutations_of_tiles();
-    //     let mut deck_sorted = deck.clone();
-    //     deck_sorted.sort_by_key(|a| a.calculate_value());
-    //     assert_eq!(deck.len(), deck_sorted.len(), "There should be 71 (70 unique square tiles + 1 root tile)s in the deck with 4 edge types. Seems not all are unique.");
+    #[test]
+    fn test_generate_all_permutations_of_square_tiles_is_ascending_value() {
+        let deck = Deck::generate_with_all_permutations();
+        let mut deck_sorted = deck.clone();
+        deck_sorted.sort_by_key(|a| a.calculate_value());
+        assert_eq!(deck.len(), deck_sorted.len(), "There should be 71 (70 unique square tiles + 1 root tile)s in the deck with 4 edge types. Seems not all are unique.");
 
-    //     itertools::assert_equal(&deck[..deck.len() - 1], &deck_sorted[1..]);
-    // }
+        itertools::assert_equal(&deck, &deck_sorted);
+    }
 
     #[bench]
     fn bench_generate_all_permutations_of_square_tiles_with_4_edge_types(b: &mut Bencher) {
         b.iter(|| Deck::generate_with_all_permutations());
+    }
+
+    #[bench]
+    fn bench_generate_all_permutations_and_root_of_square_tiles_with_4_edge_types(b: &mut Bencher) {
+        b.iter(|| Deck::generate_with_all_permutations_and_root());
     }
 }
