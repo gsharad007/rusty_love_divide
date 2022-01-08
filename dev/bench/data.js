@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1640941917647,
+  "lastUpdate": 1641621646805,
   "repoUrl": "https://github.com/gsharad007/rusty_love_divide",
   "entries": {
     "bench-Linux": [
@@ -171,6 +171,40 @@ window.BENCHMARK_DATA = {
             "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_of_square_tiles_with_4_edge_types",
             "value": 12223,
             "range": "± 2473",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "sharad@unknownworlds.com",
+            "name": "THESHREDDER\\TheBeast"
+          },
+          "committer": {
+            "email": "sharad@unknownworlds.com",
+            "name": "THESHREDDER\\TheBeast"
+          },
+          "distinct": true,
+          "id": "9612f24b600e4c9813878cedc9b2297939654074",
+          "message": "Clippy fixes",
+          "timestamp": "2022-01-08T00:59:38-05:00",
+          "tree_id": "672de58eae67a8a6661e150c5b5a54db52d8c84e",
+          "url": "https://github.com/gsharad007/rusty_love_divide/commit/9612f24b600e4c9813878cedc9b2297939654074"
+        },
+        "date": 1641621646096,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_and_root_of_square_tiles_with_4_edge_types",
+            "value": 12215,
+            "range": "± 110",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_of_square_tiles_with_4_edge_types",
+            "value": 12208,
+            "range": "± 86",
             "unit": "ns/iter"
           }
         ]
