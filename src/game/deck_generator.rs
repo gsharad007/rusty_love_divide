@@ -46,7 +46,7 @@ impl DeckGenerator<Deck<Tile>> for Deck<Tile> {
         //         tiles.push(tile);
         //     }
         // }
-        
+
         iproduct!(1..=4, 1..=4, 1..=4, 1..=4)
             .into_iter()
             .map(|i| Tile::new([i.0, i.1, i.2, i.3]))

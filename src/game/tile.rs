@@ -430,7 +430,7 @@ mod tests_hash {
         let mut _t = 0;
         b.iter(black_box(|| {
             iproduct!(1..=4, 1..=4, 1..=4, 1..=4).for_each(|edge| {
-                _t = calculate_hash( &Tile::new([edge.0, edge.1, edge.2, edge.3]));
+                _t = calculate_hash(&Tile::new([edge.0, edge.1, edge.2, edge.3]));
             });
         }));
     }
