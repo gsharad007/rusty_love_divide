@@ -46,12 +46,12 @@ impl DeckGenerator<Deck<Tile>> for Deck<Tile> {
         //         tiles.push(tile);
         //     }
         // }
-        let tiles = iproduct!(1..=4, 1..=4, 1..=4, 1..=4)
+        
+        iproduct!(1..=4, 1..=4, 1..=4, 1..=4)
             .into_iter()
             .map(|i| Tile::new([i.0, i.1, i.2, i.3]))
             .unique()
-            .collect_vec();
-        tiles
+            .collect_vec()
     }
 
     fn generate_with_all_permutations_and_root() -> Deck<Tile> {
@@ -105,11 +105,11 @@ mod tests_generating_permutations {
 
     #[bench]
     fn bench_generate_all_permutations_of_square_tiles_with_4_edge_types(b: &mut Bencher) {
-        b.iter(|| Deck::generate_with_all_permutations());
+        b.iter(Deck::generate_with_all_permutations);
     }
 
     #[bench]
     fn bench_generate_all_permutations_and_root_of_square_tiles_with_4_edge_types(b: &mut Bencher) {
-        b.iter(|| Deck::generate_with_all_permutations_and_root());
+        b.iter(Deck::generate_with_all_permutations_and_root);
     }
 }
