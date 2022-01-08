@@ -31,9 +31,13 @@ impl Tile {
 #[cfg(test)]
 mod tests_constructible_construct {
     use super::*;
+    extern crate test;
+    use core::hint::black_box;
+    use itertools::iproduct;
+    use test::Bencher;
 
     #[test]
-    fn test_struct_construtible() {
+    fn test_struct_constructible() {
         let root = Tile {
             edges: [0, 0, 0, 0],
         };
@@ -51,7 +55,7 @@ mod tests_constructible_construct {
     }
 
     #[test]
-    fn test_new_construtible() {
+    fn test_new_constructible() {
         let root = Tile::new([0, 0, 0, 0]);
         assert_eq!(4, root.edges.len());
         assert_eq!(0, root.edges[0]);
@@ -62,6 +66,40 @@ mod tests_constructible_construct {
         assert_eq!(2, user_tile.edges[1]);
         assert_eq!(3, user_tile.edges[2]);
         assert_eq!(4, user_tile.edges[3]);
+    }
+
+    #[bench]
+    fn bench_struct_constructible(b: &mut Bencher) {
+        let mut _t = Tile {
+            edges: [0, 0, 0, 0],
+        };
+        b.iter(|| {
+            iproduct!(1..=4, 1..=4, 1..=4, 1..=4).for_each(|edge| {
+                _t = Tile {
+                    edges: [edge.0, edge.1, edge.2, edge.3],
+                };
+            });
+        });
+    }
+
+    #[bench]
+    fn bench_new_constructible_for(b: &mut Bencher) {
+        let mut _t = Tile::new([0, 0, 0, 0]);
+        b.iter(|| {
+            for (e1, e2, e3, e4) in iproduct!(1..=4, 1..=4, 1..=4, 1..=4) {
+                _t = black_box(Tile::new([e1, e2, e3, e4]));
+            }
+        });
+    }
+
+    #[bench]
+    fn bench_new_constructible(b: &mut Bencher) {
+        let mut _t = Tile::new([0, 0, 0, 0]);
+        b.iter(|| {
+            iproduct!(1..=4, 1..=4, 1..=4, 1..=4).for_each(|edge| {
+                _t = Tile::new([edge.0, edge.1, edge.2, edge.3]);
+            });
+        });
     }
 }
 
@@ -97,6 +135,9 @@ impl Rotatable for Tile {
 #[cfg(test)]
 mod tests_rotatable {
     use super::*;
+    extern crate test;
+    use core::hint::black_box;
+    use test::Bencher;
 
     #[test]
     #[rustfmt::skip]
@@ -138,6 +179,26 @@ mod tests_rotatable {
 
         assert_ne!(Tile::new([4, 3, 2, 1]).edges, Tile::new([1, 2, 3, 4]).rotate_counter_clockwise().edges);
         assert_ne!(Tile::new([2, 1, 3, 4]).edges, Tile::new([1, 2, 3, 4]).rotate_counter_clockwise().edges);
+    }
+
+    #[bench]
+    fn bench_rotate_clockwise(b: &mut Bencher) {
+        let mut t = Tile::new([1, 2, 3, 4]);
+        b.iter(black_box(|| {
+            (0..10).for_each(|_| {
+                t = t.rotate_clockwise();
+            });
+        }));
+    }
+
+    #[bench]
+    fn bench_rotate_counter_clockwise(b: &mut Bencher) {
+        let mut t = Tile::new([1, 2, 3, 4]);
+        b.iter(black_box(|| {
+            (0..10).for_each(|_| {
+                t = t.rotate_counter_clockwise();
+            })
+        }));
     }
 }
 
@@ -210,6 +271,10 @@ impl Tile {
 #[cfg(test)]
 mod tests_derotation_helpers {
     use super::*;
+    extern crate test;
+    use core::hint::black_box;
+    use itertools::iproduct;
+    use test::Bencher;
 
     #[test]
     fn test_calculate_value() {
@@ -254,6 +319,26 @@ mod tests_derotation_helpers {
         assert_eq!(3, Tile::new([4, 3, 2, 1]).find_starting_edge());
         assert_eq!(1, Tile::new([2, 1, 3, 4]).find_starting_edge());
     }
+
+    #[bench]
+    fn bench_calculate_value(b: &mut Bencher) {
+        let mut _t = 0;
+        b.iter(black_box(|| {
+            iproduct!(1..=4, 1..=4, 1..=4, 1..=4).for_each(|edge| {
+                _t = Tile::new([edge.0, edge.1, edge.2, edge.3]).calculate_value();
+            });
+        }));
+    }
+
+    #[bench]
+    fn bench_find_starting_edge(b: &mut Bencher) {
+        let mut _t = 0;
+        b.iter(black_box(|| {
+            iproduct!(1..=4, 1..=4, 1..=4, 1..=4).for_each(|edge| {
+                _t = Tile::new([edge.0, edge.1, edge.2, edge.3]).find_starting_edge();
+            });
+        }));
+    }
 }
 
 use std::hash::{Hash, Hasher};
@@ -273,6 +358,11 @@ impl Hash for Tile {
 mod tests_hash {
     use super::*;
     use std::collections::hash_map::DefaultHasher;
+    extern crate test;
+    use core::hint::black_box;
+    use itertools::iproduct;
+    use test::Bencher;
+
     fn calculate_hash<T: Hash>(t: &T) -> u64 {
         let mut s = DefaultHasher::new();
         t.hash(&mut s);
@@ -333,5 +423,15 @@ mod tests_hash {
 
         assert_hash_ne!(Tile::new([1, 2, 3, 4]), Tile::new([4, 3, 2, 1]));
         assert_hash_ne!(Tile::new([1, 2, 3, 4]), Tile::new([2, 1, 3, 4]));
+    }
+
+    #[bench]
+    fn bench_calculate_hash(b: &mut Bencher) {
+        let mut _t = 0;
+        b.iter(black_box(|| {
+            iproduct!(1..=4, 1..=4, 1..=4, 1..=4).for_each(|edge| {
+                _t = calculate_hash( &Tile::new([edge.0, edge.1, edge.2, edge.3]));
+            });
+        }));
     }
 }

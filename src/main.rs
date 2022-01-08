@@ -1,4 +1,5 @@
 #![feature(test)]
+#![feature(bench_black_box)]
 
 mod acceptance_tests;
 mod game;
