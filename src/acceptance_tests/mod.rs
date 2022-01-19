@@ -19,7 +19,7 @@ mod given_square_grid_and_tiles {
         #[test]
         fn then_setup_game() -> Result<()> {
             let mut game_session = GameSession {
-                game_deck: Deck::generate_with_all_permutations_and_root(),
+                game_deck: Deck::generate_all_permutations_and_root(),
                 play_deck: Deck::new(),
             };
             assert_eq!(71, game_session.game_deck.len(), "There should have been 71 (70 unique square tiles + 1 root tile)s generated in the game with 4 edge types.");
