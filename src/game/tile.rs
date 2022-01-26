@@ -307,13 +307,7 @@ mod tests_equality {
 
 impl Tile {
     pub fn calculate_value(&self) -> u32 {
-        self.edges
-            .iter()
-            .rev()
-            .enumerate()
-            .fold(0, |result, tuple| {
-                result + ((*tuple.1) as u32 * 10_u32.pow(tuple.0 as u32))
-            })
+        edge_range!().fold(0, |result, i| (result * 10) + (self.edges[i] as u32))
     }
 
     fn find_starting_edge(&self) -> u8 {
@@ -322,7 +316,6 @@ impl Tile {
 }
 
 impl Tile {
-    #[allow(dead_code)]
     fn calculate_value_for_rotated_counter_clockwise_with_offset(&self, offset: i8) -> u32 {
         self.rotate_counter_clockwise_with_offset(offset)
             .calculate_value()
@@ -351,8 +344,7 @@ impl Tile {
     fn find_starting_edge_v2(&self) -> u8 {
         edge_range!()
             .min_by_key(|i| {
-                self.rotate_counter_clockwise_with_offset(*i as i8)
-                    .calculate_value()
+                self.calculate_value_for_rotated_counter_clockwise_with_offset(*i as i8)
             })
             .unwrap_or(0)
     }
