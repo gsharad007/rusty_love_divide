@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1643165363511,
+  "lastUpdate": 1643165409324,
   "repoUrl": "https://github.com/gsharad007/rusty_love_divide",
   "entries": {
     "bench-Linux": [
@@ -841,6 +841,124 @@ window.BENCHMARK_DATA = {
             "name": "game::tile::tests_rotatable::bench_rotate_counter_clockwise",
             "value": 568,
             "range": "± 36",
+            "unit": "ns/iter"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "sharad@unknownworlds.com",
+            "name": "THESHREDDER\\TheBeast"
+          },
+          "committer": {
+            "email": "sharad@unknownworlds.com",
+            "name": "THESHREDDER\\TheBeast"
+          },
+          "distinct": true,
+          "id": "6902097792d5cac4a28d416aa42afd12543f5527",
+          "message": "Formatting fixes",
+          "timestamp": "2022-01-25T21:48:45-05:00",
+          "tree_id": "fa46550a5a08750e92737225eaba3ca5802e180b",
+          "url": "https://github.com/gsharad007/rusty_love_divide/commit/6902097792d5cac4a28d416aa42afd12543f5527"
+        },
+        "date": 1643165408648,
+        "tool": "cargo",
+        "benches": [
+          {
+            "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_and_root_of_square_tiles_with_4_edge_types",
+            "value": 14095,
+            "range": "± 72",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_of_square_tiles_with_4_edge_types",
+            "value": 14124,
+            "range": "± 64",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_of_square_tiles_with_4_edge_types_v1",
+            "value": 42364,
+            "range": "± 234",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::deck_generator::tests_generating_permutations::bench_generate_all_permutations_of_square_tiles_with_4_edge_types_v2",
+            "value": 14153,
+            "range": "± 46",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::tile::tests_constructible_construct::bench_new_constructible",
+            "value": 538,
+            "range": "± 3",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::tile::tests_constructible_construct::bench_new_constructible_for",
+            "value": 950,
+            "range": "± 3",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::tile::tests_constructible_construct::bench_new_constructible_from_tuple",
+            "value": 539,
+            "range": "± 7",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::tile::tests_constructible_construct::bench_struct_constructible",
+            "value": 538,
+            "range": "± 3",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::tile::tests_derotation_helpers::bench_calculate_value",
+            "value": 518,
+            "range": "± 4",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::tile::tests_derotation_helpers::bench_find_starting_edge",
+            "value": 1333,
+            "range": "± 7",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::tile::tests_derotation_helpers::bench_find_starting_edge_v1",
+            "value": 1345,
+            "range": "± 6",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::tile::tests_derotation_helpers::bench_find_starting_edge_v2",
+            "value": 1334,
+            "range": "± 4",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::tile::tests_derotation_helpers::bench_find_starting_edge_v3",
+            "value": 1334,
+            "range": "± 4",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::tile::tests_hash::bench_calculate_hash",
+            "value": 6155,
+            "range": "± 25",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::tile::tests_rotatable::bench_rotate_clockwise",
+            "value": 493,
+            "range": "± 6",
+            "unit": "ns/iter"
+          },
+          {
+            "name": "game::tile::tests_rotatable::bench_rotate_counter_clockwise",
+            "value": 478,
+            "range": "± 5",
             "unit": "ns/iter"
           }
         ]
