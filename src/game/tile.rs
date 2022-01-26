@@ -29,6 +29,7 @@ impl Tile {
     pub const fn new(edges: [u8; 4]) -> Tile {
         Tile { edges }
     }
+
     pub const fn from_tuple(tuple: (u8, u8, u8, u8)) -> Tile {
         Tile::new([tuple.0, tuple.1, tuple.2, tuple.3])
     }
@@ -36,10 +37,42 @@ impl Tile {
     pub fn all_permutations(range: RangeInclusive<u8>) -> impl Iterator<Item = (u8, u8, u8, u8)> {
         iproduct!(range.clone(), range.clone(), range.clone(), range)
     }
+
+    // let range = || 0..4;
+    // pub fn range<I>(&self) -> Range<I> {
+    //     0..4
+    // }
+}
+
+macro_rules! edge_range {
+    () => {{
+        0..4
+    }};
+}
+
+// trait RangeIntegers {}
+// impl RangeIntegers for u8 {}
+// impl RangeIntegers for u8 {}
+
+#[cfg(test)]
+mod tests_common {
+    use super::*;
+    extern crate test;
+    use core::hint::black_box;
+    use test::Bencher;
+
+    pub fn bench_all_tuples<T>(b: &mut Bencher, mut f: impl FnMut((u8, u8, u8, u8)) -> T) {
+        b.iter(|| Tile::all_permutations(1..=4).for_each(|tuple| _ = black_box(f(tuple))));
+    }
+
+    pub fn bench_all_tiles<T>(b: &mut Bencher, mut f: impl FnMut(Tile) -> T) {
+        bench_all_tuples(b, |tuple| _ = black_box(f(Tile::from_tuple(tuple))));
+    }
 }
 
 #[cfg(test)]
 mod tests_constructible_construct {
+    use super::tests_common::*;
     use super::*;
     extern crate test;
     use core::hint::black_box;
@@ -79,45 +112,46 @@ mod tests_constructible_construct {
 
     #[bench]
     fn bench_struct_constructible(b: &mut Bencher) {
-        let mut _t = Tile {
+        let mut t = Tile {
             edges: [0, 0, 0, 0],
         };
-        b.iter(|| {
-            Tile::all_permutations(1..=4).for_each(|edge| {
-                _t = Tile {
-                    edges: [edge.0, edge.1, edge.2, edge.3],
-                };
-            });
+        bench_all_tuples(b, |edge| {
+            t = Tile {
+                edges: [edge.0, edge.1, edge.2, edge.3],
+            }
         });
+        // b.iter(black_box(|| {
+        //     Tile::all_permutations(1..=4).for_each(|edge| {
+        //         t = Tile {
+        //             edges: [edge.0, edge.1, edge.2, edge.3],
+        //         };
+        //     });
+        // }));
     }
 
     #[bench]
     fn bench_new_constructible_for(b: &mut Bencher) {
-        let mut _t = Tile::new([0, 0, 0, 0]);
-        b.iter(|| {
+        let mut t = Tile::new([0, 0, 0, 0]);
+        b.iter(black_box(|| {
             for (e1, e2, e3, e4) in Tile::all_permutations(1..=4) {
-                _t = black_box(Tile::new([e1, e2, e3, e4]));
+                t = black_box(Tile::new([e1, e2, e3, e4]));
             }
-        });
+        }));
     }
 
     #[bench]
     fn bench_new_constructible(b: &mut Bencher) {
-        let mut _t = Tile::from_tuple((0, 0, 0, 0));
-        b.iter(|| {
-            Tile::all_permutations(1..=4).for_each(|edge| {
-                _t = Tile::new([edge.0, edge.1, edge.2, edge.3]);
-            });
+        let mut t = Tile::from_tuple((0, 0, 0, 0));
+        bench_all_tuples(b, |edge| {
+            t = Tile::new([edge.0, edge.1, edge.2, edge.3]);
         });
     }
 
     #[bench]
     fn bench_new_constructible_from_tuple(b: &mut Bencher) {
-        let mut _t = Tile::from_tuple((0, 0, 0, 0));
-        b.iter(|| {
-            Tile::all_permutations(1..=4).for_each(|edge| {
-                _t = Tile::from_tuple(edge);
-            });
+        let mut t = Tile::from_tuple((0, 0, 0, 0));
+        bench_all_tuples(b, |edge| {
+            t = Tile::from_tuple(edge);
         });
     }
 }
@@ -163,9 +197,9 @@ impl Rotatable for Tile {
 
 #[cfg(test)]
 mod tests_rotatable {
+    use super::tests_common::*;
     use super::*;
     extern crate test;
-    use core::hint::black_box;
     use test::Bencher;
 
     #[test]
@@ -227,28 +261,21 @@ mod tests_rotatable {
 
     #[bench]
     fn bench_rotate_clockwise(b: &mut Bencher) {
-        let mut t = Tile::new([1, 2, 3, 4]);
-        b.iter(black_box(|| {
-            (0..10).for_each(|_| {
-                t = t.rotate_clockwise();
-            });
-        }));
+        bench_all_tiles(b, |tile| tile.rotate_clockwise());
     }
 
     #[bench]
     fn bench_rotate_counter_clockwise(b: &mut Bencher) {
-        let mut t = Tile::new([1, 2, 3, 4]);
-        b.iter(black_box(|| {
-            (0..10).for_each(|_| {
-                t = t.rotate_counter_clockwise();
-            })
-        }));
+        bench_all_tiles(b, |tile| tile.rotate_counter_clockwise());
     }
 }
 
 impl PartialEq for Tile {
     fn eq(&self, other: &Tile) -> bool {
-        (0..4).any(|i| self.edges == other.rotate_counter_clockwise_with_offset(i).edges)
+        let rotated_tile_edges_equal =
+            |i| self.edges == other.rotate_counter_clockwise_with_offset(i as i8).edges;
+
+        edge_range!().any(rotated_tile_edges_equal)
     }
 }
 
@@ -295,19 +322,24 @@ impl Tile {
 }
 
 impl Tile {
+    #[allow(dead_code)]
+    fn calculate_value_for_rotated_counter_clockwise_with_offset(&self, offset: i8) -> u32 {
+        self.rotate_counter_clockwise_with_offset(offset)
+            .calculate_value()
+    }
+
     // V1 Second (989 ns/iter (+/- 12))
     #[cfg(test)]
     fn find_starting_edge_v1(&self) -> u8 {
         let mut min_view = u32::MAX;
         let mut min_view_index = 0;
-        let mut tmp = self.clone();
-        for idx in 0..4 {
-            let view = tmp.calculate_value();
+        // let mut tmp = self.clone();
+        for idx in edge_range!() {
+            let view = self.calculate_value_for_rotated_counter_clockwise_with_offset(idx as i8);
             if view < min_view {
                 min_view = view;
                 min_view_index = idx;
             }
-            tmp = tmp.rotate_counter_clockwise();
         }
         min_view_index
     }
@@ -315,8 +347,9 @@ impl Tile {
     // V2 Fastest (359 ns/iter (+/- 5) --OR-- 1,132 ns/iter (+/- 23))
     // First faster number is as a trait where as the second is as an external function
     // Yet seems to slow down dependent functions
+    //? Using calculate_value_for_rotated_counter_clockwise_with_offset seems to throw this benchmarks off by ~10x
     fn find_starting_edge_v2(&self) -> u8 {
-        (0..4)
+        edge_range!()
             .min_by_key(|i| {
                 self.rotate_counter_clockwise_with_offset(*i as i8)
                     .calculate_value()
@@ -329,10 +362,8 @@ impl Tile {
     fn find_starting_edge_v3(&self) -> u8 {
         let mut min_value = u32::MAX;
         let mut min_value_index = 0;
-        (0..4).for_each(|i| {
-            let value = self
-                .rotate_counter_clockwise_with_offset(i as i8)
-                .calculate_value();
+        edge_range!().for_each(|i| {
+            let value = self.calculate_value_for_rotated_counter_clockwise_with_offset(i as i8);
             if value < min_value {
                 min_value = value;
                 min_value_index = i;
@@ -344,13 +375,15 @@ impl Tile {
 
 #[cfg(test)]
 mod tests_derotation_helpers {
+    use super::tests_common::*;
     use super::*;
     extern crate test;
-    use core::hint::black_box;
     use test::Bencher;
 
     #[test]
     fn test_calculate_value() {
+        assert_eq!(0000, Tile::new([0, 0, 0, 0]).calculate_value());
+
         assert_eq!(1111, Tile::new([1, 1, 1, 1]).calculate_value());
         assert_eq!(2111, Tile::new([2, 1, 1, 1]).calculate_value());
         assert_eq!(1211, Tile::new([1, 2, 1, 1]).calculate_value());
@@ -365,6 +398,9 @@ mod tests_derotation_helpers {
         assert_eq!(2342, Tile::new([2, 3, 4, 2]).calculate_value());
 
         assert_eq!(2222, Tile::new([2, 2, 2, 2]).calculate_value());
+        assert_eq!(3333, Tile::new([3, 3, 3, 3]).calculate_value());
+        assert_eq!(4444, Tile::new([4, 4, 4, 4]).calculate_value());
+
         assert_eq!(1234, Tile::new([1, 2, 3, 4]).calculate_value());
 
         assert_eq!(4321, Tile::new([4, 3, 2, 1]).calculate_value());
@@ -442,52 +478,26 @@ mod tests_derotation_helpers {
 
     #[bench]
     fn bench_calculate_value(b: &mut Bencher) {
-        let mut _t = 0;
-        b.iter(black_box(|| {
-            Tile::all_permutations(1..=4).for_each(|edge| {
-                _t = Tile::from_tuple(edge).calculate_value();
-            });
-        }));
+        bench_all_tiles(b, |tile| tile.calculate_value());
     }
-
     #[bench]
     fn bench_find_starting_edge(b: &mut Bencher) {
-        let mut _t = 0;
-        b.iter(black_box(|| {
-            Tile::all_permutations(1..=4).for_each(|edge| {
-                _t = Tile::from_tuple(edge).find_starting_edge();
-            });
-        }));
+        bench_all_tiles(b, |tile| tile.find_starting_edge());
     }
 
     #[bench]
     fn bench_find_starting_edge_v1(b: &mut Bencher) {
-        let mut _t = 0;
-        b.iter(black_box(|| {
-            Tile::all_permutations(1..=4).for_each(|edge| {
-                _t = Tile::from_tuple(edge).find_starting_edge_v1();
-            });
-        }));
+        bench_all_tiles(b, |tile| tile.find_starting_edge_v1());
     }
 
     #[bench]
     fn bench_find_starting_edge_v2(b: &mut Bencher) {
-        let mut _t = 0;
-        b.iter(black_box(|| {
-            Tile::all_permutations(1..=4).for_each(|edge| {
-                _t = Tile::from_tuple(edge).find_starting_edge_v2();
-            });
-        }));
+        bench_all_tiles(b, |tile| tile.find_starting_edge_v2())
     }
 
     #[bench]
     fn bench_find_starting_edge_v3(b: &mut Bencher) {
-        let mut _t = 0;
-        b.iter(black_box(|| {
-            Tile::all_permutations(1..=4).for_each(|edge| {
-                _t = Tile::from_tuple(edge).find_starting_edge_v3();
-            });
-        }));
+        bench_all_tiles(b, |tile| tile.find_starting_edge_v3());
     }
 }
 
@@ -495,16 +505,16 @@ use std::hash::{Hash, Hasher};
 impl Hash for Tile {
     fn hash<H: Hasher>(&self, state: &mut H) {
         let idx = self.find_starting_edge() as usize;
-        (0..4).for_each(|i| self.edges[(idx + i) % 4].hash(state))
+        edge_range!().for_each(|i| self.edges[(idx + i) % 4].hash(state))
     }
 }
 
 #[cfg(test)]
 mod tests_hash {
+    use super::tests_common::*;
     use super::*;
     use std::collections::hash_map::DefaultHasher;
     extern crate test;
-    use core::hint::black_box;
     use test::Bencher;
 
     fn calculate_hash<T: Hash>(t: &T) -> u64 {
@@ -575,11 +585,6 @@ mod tests_hash {
 
     #[bench]
     fn bench_calculate_hash(b: &mut Bencher) {
-        let mut _t = 0;
-        b.iter(black_box(|| {
-            Tile::all_permutations(1..=4).for_each(|edge| {
-                _t = calculate_hash(&Tile::from_tuple(edge));
-            });
-        }));
+        bench_all_tiles(b, |tile| calculate_hash(&tile));
     }
 }

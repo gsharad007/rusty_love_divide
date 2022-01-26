@@ -11,3 +11,8 @@ repository = "https://github.com/gsharad007/rusty_love_divide/"
 [dependencies]
 anyhow = { version = "1.0" }
 itertools = { version = "0.10" }
+
+[profile.release]
+opt-level = 3
+# lto seems to blow up some benchmarks
+# lto = true

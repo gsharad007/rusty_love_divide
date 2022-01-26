@@ -4,8 +4,13 @@
 mod acceptance_tests;
 mod game;
 
+use game::deck::Deck;
+use game::deck_generator::DeckGenerator;
+// use game::tile::Tile;
+
 fn main() {
-    println!("Hello, world!");
+    let game_deck = Deck::generate_all_permutations_and_root();
+    println!("Hello, world! {0}", game_deck.len());
 }
 
 #[test]
