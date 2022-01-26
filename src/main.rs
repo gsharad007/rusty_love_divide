@@ -13,7 +13,18 @@ fn main() {
     println!("Hello, world! {0}", game_deck.len());
 }
 
-#[test]
-fn test_verify_testing() {
-    assert_eq!(2 + 2, 4);
+#[cfg(test)]
+mod tests_main {
+    use super::*;
+    extern crate test;
+
+    #[test]
+    fn test_main() {
+        main();
+    }
+
+    #[test]
+    fn test_verify_testing() {
+        assert_eq!(2 + 2, 4);
+    }
 }

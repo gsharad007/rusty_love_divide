@@ -17,6 +17,15 @@ mod given_square_grid_and_tiles {
         use itertools::Itertools;
 
         #[test]
+        fn test_game_session_debug() {
+            let game_session = GameSession {
+                game_deck: Deck::new(),
+                play_deck: Deck::new(),
+            };
+            assert_eq!("GameSession { game_deck: [], play_deck: [] }", format!("{game_session:?}"));
+        }
+
+        #[test]
         fn then_setup_game() -> Result<()> {
             let mut game_session = GameSession {
                 game_deck: Deck::generate_all_permutations_and_root(),
