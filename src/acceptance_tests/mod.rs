@@ -22,7 +22,10 @@ mod given_square_grid_and_tiles {
                 game_deck: Deck::new(),
                 play_deck: Deck::new(),
             };
-            assert_eq!("GameSession { game_deck: [], play_deck: [] }", format!("{game_session:?}"));
+            assert_eq!(
+                "GameSession { game_deck: [], play_deck: [] }",
+                format!("{game_session:?}")
+            );
         }
 
         #[test]
